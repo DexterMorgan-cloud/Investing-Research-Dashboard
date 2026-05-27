@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 
 <head>
 
-    <title>Investment Research Dashboard</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+        Investment Research Dashboard
+
+    </title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
@@ -14,9 +24,14 @@
 
     <div class="container">
 
-        <h1>Investment Research Dashboard</h1>
+        <h1>
 
-        <form method="POST" class="search-form">
+            Investment Research Dashboard
+
+        </h1>
+
+
+        <form method="POST">
 
             <input type="text"
                    name="ticker"
@@ -31,159 +46,364 @@
 
         </form>
 
+
         {% if stock %}
 
-            {% if stock.error %}
+        <div class="stock-container">
 
-                <div class="error-card">
+            <h2>
 
-                    {{ stock.error }}
+                {{ stock.company_name }}
 
-                </div>
+                ({{ stock.symbol }})
 
-            {% else %}
+            </h2>
 
-                <div class="stock-card">
 
-                    <h2>
+            {% if market_status %}
 
-                        {{ stock.company_name }}
+            <p class="market-status">
 
-                        ({{ stock.symbol }})
+                Market Status:
+                <span>
 
-                    </h2>
+                    {{ market_status }}
 
-                    <div class="metrics-grid">
+                </span>
 
-                        <div class="metric-box">
-
-                            <h3>Current Price</h3>
-
-                            <p>${{ stock.current_price }}</p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>PE Ratio</h3>
-
-                            <p>
-
-                                {% if stock.pe_ratio %}
-
-                                    {{ "%.2f"|format(stock.pe_ratio) }}
-
-                                {% else %}
-
-                                    N/A
-
-                                {% endif %}
-
-                            </p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>Market Cap</h3>
-
-                            <p>
-
-                                ${{ "{:,.0f}".format(stock.market_cap) }}
-
-                            </p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>52 Week High</h3>
-
-                            <p>${{ stock.fifty_two_week_high }}</p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>52 Week Low</h3>
-
-                            <p>${{ stock.fifty_two_week_low }}</p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>Recommendation</h3>
-
-                            <p class="recommendation">
-
-                                {{ stock.recommendation.replace('_', ' ').title() }}
-
-                            </p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>Next Earnings</h3>
-
-                            <p>
-
-                                {{ stock.next_earnings_date }}
-
-                                <br>
-
-                                <span class="date-format">
-
-                                    (DD-MM-YYYY)
-
-                                </span>
-
-                            </p>
-
-                        </div>
-
-                        <div class="metric-box">
-
-                            <h3>Employees</h3>
-
-                            <p>
-
-                                {{ "{:,}".format(stock.employees) }}
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <div class="summary-section">
-
-                        <h3>Company Summary</h3>
-
-                        <p class="summary">
-
-                            {{ stock.summary }}
-
-                        </p>
-
-                    </div>
-
-                </div>
+            </p>
 
             {% endif %}
 
+
+            <div class="metrics-grid">
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            Current Price
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            The latest trading price
+                            of one share of the stock.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        ${{ stock.current_price }}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            PE Ratio
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Shows how expensive the stock
+                            is relative to company earnings.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        {% if stock.pe_ratio %}
+
+                            {{ "%.2f"|format(stock.pe_ratio) }}
+
+                        {% else %}
+
+                            N/A
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            Market Cap
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Total market value of the company
+                            based on all outstanding shares.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        ${{ "{:,.0f}".format(stock.market_cap) }}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            52 Week High
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Highest stock price reached
+                            during the last 52 weeks.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        ${{ stock.fifty_two_week_high }}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            52 Week Low
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Lowest stock price reached
+                            during the last 52 weeks.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        ${{ stock.fifty_two_week_low }}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            Recommendation
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Analyst consensus rating
+                            based on Wall Street opinions.
+
+                        </span>
+
+                    </div>
+
+                    <p class="recommendation">
+
+                        {{ stock.recommendation.replace('_', ' ').title() }}
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            Next Earnings
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Expected date for the next
+                            company earnings report.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        {{ stock.next_earnings_date }}
+
+                        <br>
+
+                        <span class="date-format">
+
+                            (DD-MM-YYYY)
+
+                        </span>
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="metric-box">
+
+                    <div class="tooltip-container">
+
+                        <h3>
+
+                            Employees
+
+                            <span class="info-icon">ⓘ</span>
+
+                        </h3>
+
+                        <span class="tooltip-text">
+
+                            Approximate number of full-time
+                            employees working at the company.
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        {{ "{:,}".format(stock.employees) }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-section">
+
+                <h3>
+
+                    Company Summary
+
+                </h3>
+
+                <p class="summary-text">
+
+                    {{ stock.summary }}
+
+                </p>
+
+            </div>
+
+
+            <div class="news-section">
+
+                <h3>
+
+                    Latest News
+
+                </h3>
+
+                {% for article in news %}
+
+                <div class="news-card">
+
+                    <a href="{{ article.link }}"
+                       target="_blank">
+
+                        {{ article.title }}
+
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
         {% endif %}
 
+
+        <p class="disclaimer">
+
+            Disclaimer:
+            This dashboard is for informational
+            and educational purposes only.
+            It does not constitute financial advice.
+            Always do your own research before
+            making investment decisions.
+
+        </p>
+
     </div>
- <footer class="disclaimer">
 
-    Disclaimer:
-    This dashboard is for informational and educational purposes only.
-    It does not constitute financial advice.
-    Always do your own research before making investment decisions.
-
-</footer>
 </body>
 
 </html>
